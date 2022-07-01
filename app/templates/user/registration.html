@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Регистрация</title>
+{% endblock %}
+{% block body %}
+    <body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <h1 class="h3 mb-3 fw-normal"><a href="{{ url_for('user.login') }}">Войти</a> или Зарегистрироваться</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            {% for field in form if field.name not in ['csrf_token', 'remember', 'submit'] %}
+                <div class="form-floating">
+                    {{ field(class_="form-control") }}
+                    {{ field.label() }}
+                </div>
+            {% endfor %}
+            {{ form.submit(class_="w-100 btn btn-lg btn-primary") }}
+            <p class="mt-5 mb-3 text-muted">© 2022</p>
+        </form>
+    </main>
+    </body>
+{% endblock %}

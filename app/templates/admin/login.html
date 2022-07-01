@@ -1,0 +1,20 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block content %}
+    <div id="login" class="wnd_dlg_back login_wnd">
+        <div class="login">
+            <p class="title">Админ-панель</p>
+            {% for cat, msg in get_flashed_messages(True) %}
+                <div class="flash {{ cat }}">{{ msg }}</div>
+            {% endfor %}
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <p>{{ form.login.label(class_='form-label') }}
+                    {{ form.login() }}
+                <p>{{ form.psw.label(class_='form-label') }}
+                    {{ form.psw() }}
+                <p style="text-align: center">{{ form.submit(class_="login_button") }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

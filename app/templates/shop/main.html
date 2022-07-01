@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Интернет-магазин
+{% endblock %}
+
+{% block body %}
+    <div class="fixed-top">
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="{{ url_for('shop.index') }}" class="nav-link px-2 link-secondary">Главная</a></li>
+                        <li><a href="{{ url_for('shop.products') }}" class="nav-link px-2 link-white">Ассортимент</a>
+                        </li>
+                        <li><a href="{{ url_for('shop.about') }}" class="nav-link px-2 link-white">О магазине</a></li>
+                    </ul>
+                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" method="post">
+                        {{ srch_form.hidden_tag() }}
+                        {{ srch_form.category() }}
+                        {{ srch_form.value(type='search', class_='form-control form-control-dark text-white bg-dark', placeholder='Search...') }}
+                    </form>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-outline-primary me-2"
+                                onclick="location.href = '{{ url_for('user.login') }}'">Войти
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                onclick="location.href = '{{ url_for('user.registration') }}'">
+                            Зарегистрироваться
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+{% endblock %}
