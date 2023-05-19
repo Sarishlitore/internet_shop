@@ -21,28 +21,33 @@ def load_user(user_id):
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        usr = shop_db.get_user_by_email(form.email.data)
-        if usr and check_password_hash(usr.psw, form.psw.data):
+    log_form = LoginForm()
+    if log_form.validate_on_submit():
+        usr = shop_db.get_user_by_username(log_form.username.data)
+        if usr and check_password_hash(usr.password, log_form.password.data):
             user_login = UserLogin().create(usr)
             login_user(user_login)
-            return redirect(url_for('profile'))
-    return render_template('user//login.html', form=form)
+            return redirect(url_for('.profile'))
+    return render_template('user/login.html', log_form=log_form)
 
 
 @user.route('/registration', methods=['GET', 'POST'])
 def registration():
-    form = RegistrationForm()
+    reg_form = RegistrationForm()
 
-    if form.validate_on_submit():
-        hash_psw = generate_password_hash(form.psw.data)
-        if shop_db.add_user(name=form.name.data, email=form.email.data, hash_psw=hash_psw):
+    if reg_form.validate_on_submit():
+        hash_psw = generate_password_hash(reg_form.password.data)
+        if shop_db.add_user(username=reg_form.username.data, password=hash_psw):
             flash("Вы успешно зарегистрированы", "success")
-            return redirect(url_for('index'))
+            return redirect(url_for('.profile'))
         else:
             flash("Ошибка при добавлении в БД", "error")
-    return render_template('user/registration.html', form=form)
+    return render_template('user/registration.html', reg_form=reg_form)
+
+
+@user.route('/profile', methods=['GET', 'POST'])
+def profile():
+    return render_template('user/profile.html')
 
 
 @login_required

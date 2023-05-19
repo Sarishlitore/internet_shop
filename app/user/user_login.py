@@ -16,8 +16,8 @@ class UserLogin(UserMixin):
     def get_id(self):
         return str(self.__user.id)
 
-    def get_email(self):
-        return str(self.__user.email)
+    def get_username(self):
+        return str(self.__user.username)
 
-    def get_name(self):
-        return str(self.__user.profile.name)
+    def get_fullname(self):
+        return f"{self.__user.first_name} {self.__user.last_name}"

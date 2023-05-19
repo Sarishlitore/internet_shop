@@ -27,3 +27,8 @@ def about():
     if srch_form.validate_on_submit():
         return 'There should be product searching'
     return render_template('shop/about.html', srch_form=srch_form)
+
+
+@shop.route('/cart')
+def cart():
+    return render_template('shop/cart.html')

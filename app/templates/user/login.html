@@ -5,20 +5,21 @@
 {% endblock %}
 {% block body %}
     <main class="form-signin w-100 m-auto">
-        <h1 class="h3 mb-3 fw-normal">Войти или <a href="{{ url_for('user.registration') }}">Зарегистрироваться</a></h1>
+        <h1 class="h3 mb-3 fw-normal">
+            Войти или <a href="{{ url_for('customer.registration') }}">Зарегистрироваться</a>
+        </h1>
         <form method="post">
-            {{ form.hidden_tag() }}
-            {% for field in form if field.name not in ['csrf_token', 'remember', 'submit'] %}
+            {{ log_form.hidden_tag() }}
+            {% for field in log_form if field.name not in ['csrf_token', 'remember', 'submit'] %}
                 <div class="form-floating">
                     {{ field(class_="form-control") }}
                     {{ field.label() }}
                 </div>
             {% endfor %}
             <div class="checkbox mb-3">
-                {{ form.remember.label() }}{{ form.remember() }}
+                {{ log_form.remember.label() }}{{ log_form.remember() }}
             </div>
-            {{ form.submit(class_="w-100 btn btn-lg btn-primary") }}
-            <p class="mt-5 mb-3 text-muted">© 2022</p>
+            {{ log_form.submit(class_="w-100 btn btn-lg btn-primary") }}
         </form>
     </main>
 {% endblock %}

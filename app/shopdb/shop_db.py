@@ -1,22 +1,19 @@
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.user.models import Users, Profiles
+from app.user.models import User
 
 
 class ShopDB:
     def __init__(self, session):
         self.__session = session
 
-    def add_user(self, name: str, email: str, hash_psw: str) -> bool:
+    def add_user(self, username: str, password: str) -> bool:
         try:
-            if Users.query.filter_by(email=email).first():
-                print("Пользователь с таким email уже существует")
+            if User.query.filter_by(username=username).first():
+                print("Пользователь с таким псевдонимом уже существует")
                 return False
-            user = Users(email=email, psw=hash_psw)
+            user = User(username=username, password=password)
             self.__session.add(user)
-            self.__session.flush()
-            profile = Profiles(name=name, user_id=user.id)
-            self.__session.add(profile)
             self.__session.commit()
         except SQLAlchemyError as err:
             print('Ошибка при добавление нового пользователя ' + str(err))
@@ -26,7 +23,7 @@ class ShopDB:
     @staticmethod
     def get_user(user_id: int):
         try:
-            user = Users.query.filter_by(id=user_id).first()
+            user = User.query.filter_by(id=user_id).first()
             if not user:
                 print('Пользователь не найден')
                 return False
@@ -36,9 +33,9 @@ class ShopDB:
         return False
 
     @staticmethod
-    def get_user_by_email(email):
+    def get_user_by_username(username):
         try:
-            user = Users.query.filter_by(email=email).first()
+            user = User.query.filter_by(username=username).first()
             if not user:
                 print('Пользователь не найден')
                 return False

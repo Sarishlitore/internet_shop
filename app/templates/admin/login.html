@@ -1,6 +1,13 @@
 {% extends 'admin/base_admin.html' %}
 
 {% block content %}
+    {% if srch_form %}
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" method="post">
+            {{ srch_form.hidden_tag() }}
+            {{ srch_form.category() }}
+            {{ srch_form.value(type='search', placeholder='Search...') }}
+        </form>
+    {% endif %}
     <div id="login" class="wnd_dlg_back login_wnd">
         <div class="login">
             <p class="title">Админ-панель</p>

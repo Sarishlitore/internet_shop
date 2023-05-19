@@ -1,42 +1,49 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, session
+from flask import Blueprint
+from flask_admin import Admin, BaseView, expose, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_login import current_user
 
-from app.admin.forms import LoginForm
-
-admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
-
-
-def login_admin():
-    session['admin_logged'] = 1
+from app.user.models import User
 
 
-def is_logged():
-    return True if session.get('admin_logged') else False
+class AdminBlueprint(Blueprint):
+    views = None
+
+    def __init__(self, *args, **kwargs):
+        self.views = []
+        super(AdminBlueprint, self).__init__('admin', __name__, template_folder='templates', static_folder='static')
+
+    def add_view(self, view):
+        self.views.append(view)
+
+    def register(self, app, options):
+        admin_page = Admin(app, name='Магазин', template_mode='bootstrap3', index_view=DashBoardView(),
+                           endpoint='admin')
+
+        for view in self.views:
+            admin_page.add_view(view)
+        return super(AdminBlueprint, self).register(app, options)
 
 
-def logout_admin():
-    session.pop('admin_logged', None)
+class DashBoardView(AdminIndexView):
+    @expose('/')
+    def add_data_db(self):
+        all_users = User.query.all()
+        return self.render('admin/dashboard_index.html', all_users=all_users)
+
+    def is_accessible(self):
+        return current_user.get_id() == '1'
 
 
-@admin.route('/')
-def index():
-    return redirect(url_for('.login', logged=is_logged()))
+class Controller(ModelView):
+    def is_accessible(self):
+        return current_user.get_id() == '1'
 
 
-@admin.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        if form.login.data == 'admin' and form.psw.data == '12345':
-            login_admin()
-            return redirect(url_for('.index'))
-        else:
-            flash('Неверная пара логин/пароль', 'error')
-    return render_template('admin/login.html', form=form, logged=is_logged())
+class AnyPageView(BaseView):
+    @expose('/')
+    def any_page(self):
+        return self.render('admin/any_page/index.html')
 
-
-@admin.route('/logout')
-def logout():
-    if not is_logged():
-        return redirect(url_for('.login'))
-    logout_admin()
-    return redirect(url_for('.login', logged=is_logged()))
+    def is_accessible(self):
+        return current_user.get_id() == '1'
